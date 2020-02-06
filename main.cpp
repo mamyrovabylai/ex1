@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -97,10 +96,30 @@ double rpn( const std::vector<std::string> & expr )
 
    return st. peek( );
 }
+
+
  void teststack( )
 {
-stack s1 = { 1, 2, 3, 4, 5 };
-    
+
+//stack s;
+//s.push(1);
+//s.push(1);
+//s.push(1);
+//s.push(1);
+//s.push(1);
+//stack s1 = s; 
+//stack s2(s1);
+
+//s2.push(6);
+//std::cout<<s2.peek()<<std::endl;
+//std::cout<<s2;
+//s2.clear();
+///s = s2;
+//stack s3;
+
+stack s1 = {1,2,3,4,5};
+
+
 stack s2 = s1; // Copy constructor.
     for( unsigned int j = 0; j < 30; ++ j ){
         s2. push( j * j );
@@ -112,6 +131,8 @@ s1 = { 100,101,102,103 };
 // calls assignment with the result.
 std::cout << s2 << "\n";
 }
+
+
 
 int main( int argc, char* argv [ ] )
 {
@@ -133,4 +154,3 @@ int main( int argc, char* argv [ ] )
 
    return 0;
 }
-
