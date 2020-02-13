@@ -84,9 +84,8 @@ void stack::push(double d){
 
 //Checked: 1
 void stack::pop(){
-   // if(current_size == 0){
-     //   throw std::runtime_error("pop: stack is already empty!");
-    //}
+    if(current_size == 0)
+        throw std::runtime_error("pop: stack is already empty!");
     current_size--;
 }
 
@@ -103,9 +102,8 @@ void stack::reset(size_t s){
 
 //Checked: 1
 double stack::peek() const{
-    //if(current_size == 0) throw std::runtime_error("peek: stack is empty!");
-    //else
-        return data[current_size-1];
+    if(current_size == 0) throw std::runtime_error("peek: stack is empty!");
+    return data[current_size-1];
 }
 
 //Checked: 1
