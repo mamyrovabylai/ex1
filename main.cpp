@@ -1,156 +1,148 @@
 #include <iostream>
-#include <vector>
-#include <string>
 #include <cmath>
+#include <deque>
 #include "stack.h"
 
-// This is part of an evaluator for expressions in RPN.
-// If you implemented stack correctly, it will work.
+int tests_run = 0;
+int tests_correct = 0;
 
-// Is s an operator with one argument?
-
-bool isoperator1( const std::string& s )
+void checkBool( const std::string &s, const bool&  given, const bool& correct )
 {
-   return s == "exp" || s == "log" || s == "sqrt";
-}
-
-// Is s an operator with two arguments?
-
-bool isoperator2( const std::string& s )
-{
-   return s == "+" || s == "-" || s == "*" || s == "/" ||
-          s == "==" || s == "!=";
-}
-
-// Apply an operator with one argument:
-
-double apply1( const std::string& s, double d1 )
-{
-   // std::cout << "applying " << s << " on " << d1 << "\n";
-
-   if( s == "exp" ) return exp(d1);
-   if( s == "log" ) return log(d1);
-   if( s == "sqrt" ) return sqrt(d1);
-
-   std::abort( );  // Unreachable, if program written correctly.
-}
-
-// Apply an operator with two arguments:
-
-double apply2( const std::string& s, double d1, double d2 )
-{
-   // std::cout << "applying " << s << " on " << d1 << " and " << d2 << "\n";
-
-   if( s == "+" ) return d1 + d2;
-   if( s == "-" ) return d1 - d2;
-   if( s == "*" ) return d1 * d2;
-   if( s == "/" ) return d1 / d2;
-   if( s == "==" ) return d1 == d2;
-   if( s == "!=" ) return d1 != d2;
-
-   std::abort( );  // Unreachable, if written well.
-}
-
-
-double makedouble( const std::string& s )
-{
-   return atof( s. c_str( ));
-}
-
-// Evaluate an expression in RPN:
-
-double rpn( const std::vector<std::string> & expr )
-{
-   stack st;
-
-   for( const auto& e : expr )
+   tests_run++;	
+   if( given != correct )
    {
-      if( isoperator2( e ))
-      {
-         if( st. size( ) < 2 )
-            throw std::runtime_error( "less than two numbers on stack" );
-
-         double d2 = st. peek( ); st. pop( );
-         double d1 = st. peek( ); st. pop( );
-
-         st. push( apply2( e, d1, d2 ));
-      }
-      else
-      {
-         if( isoperator1(e))
-         {
-            if( st. size( ) < 1 )
-               throw std::runtime_error( "no number on stack" );
-
-            double d1 = st. peek( ); st. pop( );
-            st. push( apply1( e, d1 ));
-         }
-         else
-            st. push( makedouble( e ));
-      }
-      std::cout << e << " => " << st << "\n";
+      std::cout << "~INCORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+   } else {
+      std::cout << "~CORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+      tests_correct++;
    }
+}
 
-   if( st. size( ) != 1 )
-      throw std::runtime_error( "expression is not well-formed" );
+void checkSizet( const std::string &s, const size_t&  given, const size_t& correct )
+{
+   tests_run++;	
+   if( given != correct )
+   {
+      std::cout << "~INCORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+   } else {
+      std::cout << "~CORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+      tests_correct++;
+   }
+}
 
-   return st. peek( );
+void checkDouble( const std::string &s, const double&  given, const double& correct )
+{
+   tests_run++;	
+   if( abs(given - correct) > 0.1 )
+   {
+      std::cout << "~INCORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+   } else {
+      std::cout << "~CORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+      tests_correct++;
+   }
+}
+
+void checkString( const std::string s, const std::string&  given, const std::string& correct )
+{
+   tests_run++;	
+   if( given != correct )
+   {
+      std::cout << "~INCORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+   } else {
+      std::cout << "~CORRECT " << s << " : " << given <<
+                   " SHOULD HAVE BEEN " << correct << "\n";
+      tests_correct++;
+   }
 }
 
 
- void teststack( )
-{
+int main(){
+	std::string message = "DEFAULT CONSTRUCTOR";
+	stack defst;
+	std::deque<int> defdq;
+	checkSizet(message, defst.size(), defdq.size());
+	checkBool(message, defst.empty(), 1);	
 
-//stack s;
-//s.push(1);
-//s.push(1);
-//s.push(1);
-//s.push(1);
-//s.push(1);
-//stack s1 = s; 
-//stack s2(s1);
+	message = "INIT_LIST CONSTRUCTOR";
+	stack initst = {1,3,5,7,9,11,13};
+	std::deque<int> initdq {1,3,5,7,9,11,13};	
+	checkSizet(message, initst.size(), initdq.size());
+	checkBool(message, initst.empty(), 0);
+	checkSizet(message, initst.peek(), initdq.back());
 
-//s2.push(6);
-//std::cout<<s2.peek()<<std::endl;
-//std::cout<<s2;
-//s2.clear();
-///s = s2;
-//stack s3;
+	message = "COPY CONSTRUCTOR";	
+	stack copyst {initst};
+	std::deque<int> copydq {initdq};
+	checkSizet(message, copyst.size(), copydq.size());
+	checkBool(message, copyst.empty(), 0);	
 
-stack s1 = {1,2,3,4,5};
+	message = "PUSH and POP";
+
+	for(size_t i = 1; i < 20000; i *= 2){
+		defst.push(i);
+		defdq.push_back(i);
+	}	
+
+	while(!defdq.empty()){
+		checkSizet(message, defst.peek(), defdq.back());
+		checkSizet(message, defst.size(), defdq.size());
+		defst.pop();
+		defdq.pop_back();
+	}
+
+	message = "ASSIGNMENT OPERATOR";
+
+	defst = initst;
+	defdq = initdq;
 
 
-stack s2 = s1; // Copy constructor.
-    for( unsigned int j = 0; j < 30; ++ j ){
-        s2. push( j * j );
-    }
-s1 = s2; // Assignment.
-s1 = s1; // Self assignment.
-s1 = { 100,101,102,103 };
-// Works because the compiler inserts constructor and
-// calls assignment with the result.
-std::cout << s2 << "\n";
-}
+	for(int i = 1; i > -23; i -= 2){
+        
+		defst.push(i);
+		defdq.push_back(i);
+	}	
 
+	copyst = copyst;
+	copyst = defst;
+	copydq = defdq;
 
+	while(!defdq.empty()){
+		checkSizet(message, defst.peek(), defdq.back());
+		checkSizet(message, defst.size(), defdq.size());
+		defst.pop();
+		defdq.pop_back();
+	}
 
-int main( int argc, char* argv [ ] )
-{
-    teststack();
-    
-    //If your stack was implemented correctly, this example from
-    //wikipedia will work. The outcome is 5.
+	message = "SELF ASSIGNMENT";
+	for(size_t i = 0; i < 3; i++){
+		copyst.pop();
+		copydq.pop_back();
+	}	
+	
+	checkSizet(message, copyst.peek(), copydq.back());
+	checkSizet(message, copyst.size(), copydq.size());
+	
+	message = "CLEAR";
+	copyst.clear();
+	copydq.clear();
+	
+	checkSizet(message, copyst.size(), copydq.size());
 
-   double d = rpn(
-      { "15", "7", "1", "1", "+", "-", "/", "3", "*",
-         "2", "1", "1", "+", "+", "-" } );
+	copyst.push(42);
+	copydq.push_back(42);
 
-   std::cout << "outcome is " << d << "\n";
+	message = "WHAT'S MEANING OF LIFE?";
 
-   // sqrt(2) * sqrt(2) = 2.
+	checkSizet(message, copyst.peek(), copydq.back());
 
-   d = rpn( { "2", "sqrt", "2", "sqrt", "*" } );
-   std::cout << "outcome is " << d << "\n";
-
-   return 0;
+	std::cout << "\nTESTS RUN: " << tests_run << std::endl;
+	std::cout << "\nTESTS CORRECT: " << tests_correct << std::endl;		
+	return 0;
 }

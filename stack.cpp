@@ -65,9 +65,10 @@ stack::~stack(){
 }
 
 //Checked: 1 
-const stack& stack::operator = (const stack& s){
+const stack& stack::operator=(const stack& s){
     ensure_capacity(s.size());
-    for(int i=0;i<s.current_size;i++){
+    current_size = s.size();
+    for(int i=0;i<s.size();i++){
         data[i] = s.data[i];
     }
     
@@ -83,9 +84,9 @@ void stack::push(double d){
 
 //Checked: 1
 void stack::pop(){
-    if(current_size == 0){
-        throw std::runtime_error("pop: stack is already empty!");
-    }
+   // if(current_size == 0){
+     //   throw std::runtime_error("pop: stack is already empty!");
+    //}
     current_size--;
 }
 
@@ -102,8 +103,9 @@ void stack::reset(size_t s){
 
 //Checked: 1
 double stack::peek() const{
-    if(current_size == 0) throw std::runtime_error("peek: stack is empty!");
-    else return data[current_size-1];
+    //if(current_size == 0) throw std::runtime_error("peek: stack is empty!");
+    //else
+        return data[current_size-1];
 }
 
 //Checked: 1
